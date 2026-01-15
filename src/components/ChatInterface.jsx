@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, User, Bot, FileText, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
+import { apiClient } from '../api/axios';
 import { ENDPOINTS } from '../config';
 import { StrategySelector } from './StrategySelector';
 import ReactMarkdown from 'react-markdown';
@@ -31,7 +31,7 @@ export const ChatInterface = ({ userEmail = "varun@example.com" }) => {
         setIsLoading(true);
 
         try {
-            const res = await axios.post(ENDPOINTS.CHAT, {
+            const res = await apiClient.post(ENDPOINTS.CHAT, {
                 query,
                 user_email: userEmail,
                 rag_strategy: strategy
@@ -78,8 +78,8 @@ export const ChatInterface = ({ userEmail = "varun@example.com" }) => {
 
                         <div className={`space-y-2 max-w-3xl ${msg.role === 'user' ? 'items-end flex flex-col' : ''}`}>
                             <div className={`p-4 rounded-2xl ${msg.role === 'user'
-                                    ? 'bg-indigo-600 text-white rounded-tr-sm'
-                                    : 'bg-slate-800 text-slate-200 rounded-tl-sm'
+                                ? 'bg-indigo-600 text-white rounded-tr-sm'
+                                : 'bg-slate-800 text-slate-200 rounded-tl-sm'
                                 }`}>
                                 <div className="prose prose-invert prose-sm">
                                     <ReactMarkdown>{msg.content}</ReactMarkdown>

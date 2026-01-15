@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Upload, FileText, X, CheckCircle, AlertCircle, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
+import { apiClient } from '../api/axios';
 import { ENDPOINTS } from '../config';
 
 export const FileUpload = ({ userEmail = "varun@example.com" }) => {
@@ -12,7 +12,7 @@ export const FileUpload = ({ userEmail = "varun@example.com" }) => {
 
     const fetchFiles = async () => {
         try {
-            const res = await axios.get(ENDPOINTS.LIST_FILES, { params: { user_email: userEmail } });
+            const res = await apiClient.get(ENDPOINTS.LIST_FILES, { params: { user_email: userEmail } });
             setFiles(res.data);
         } catch (err) {
             console.error("Failed to fetch files", err);
@@ -56,7 +56,7 @@ export const FileUpload = ({ userEmail = "varun@example.com" }) => {
         formData.append('user_email', userEmail);
 
         try {
-            await axios.post(ENDPOINTS.UPLOAD, formData, {
+            await apiClient.post(ENDPOINTS.UPLOAD, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             setUploadStatus('success');
@@ -70,7 +70,7 @@ export const FileUpload = ({ userEmail = "varun@example.com" }) => {
 
     const handleDelete = async (fileId) => {
         try {
-            await axios.delete(ENDPOINTS.DELETE_FILE(fileId), { params: { user_email: userEmail } });
+            await apiClient.delete(ENDPOINTS.DELETE_FILE(fileId), { params: { user_email: userEmail } });
             fetchFiles();
         } catch (err) {
             console.error("Failed to delete", err);
